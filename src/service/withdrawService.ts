@@ -14,12 +14,15 @@ export let withdraw = async () => {
 
         var cookieEtopWithdrawItem = await ConfigInfo.findAll({ where: { key: "empire_withdraw", type: "cookie" } });
 
-        var items = await connection.query("select ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage", { type: QueryTypes.SELECT });
-        for (let i = 0; i < items.length; i++) {
+        var items = await connection.query("select ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage and qw.status = false ", { type: QueryTypes.SELECT });
+        console.log(items.length)
+        for (var i = 0; i < items.length; i++) {
 
             var token = await generateToken();
             // sleep
             await snooze(1000);
+
+            console.log('vo k ')
 
             // start withdraw
             const withdrawLink = `https://csgoempire.com/api/v2/trading/deposit/${(items[i] as any).itemid}/withdraw`;
@@ -37,6 +40,9 @@ export let withdraw = async () => {
                     'Cookie': cookieEtopWithdrawItem[0].value
                 }
             });
+
+            // update status withdraw empire
+            await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`)
 
             // send mail
             var transporter = nodemailer.createTransport({
@@ -67,7 +73,8 @@ export let withdraw = async () => {
 
 export let generateToken = async () => {
 
-    var cookieEmpireWithdraw = await ConfigInfo.findAll({ where: { key: "empire_withdraw", type: "cookie" } });
+    try{
+        var cookieEmpireWithdraw = await ConfigInfo.findAll({ where: { key: "empire_withdraw", type: "cookie" } });
     const genTokenLink = 'https://csgoempire.com/api/v2/user/security/token';
 
     var tokenRes = await axios.post(genTokenLink, querystring.stringify({
@@ -82,6 +89,10 @@ export let generateToken = async () => {
 
     var token = tokenRes.data.token;
     console.log(`Token generate ${token}`);
+    }catch(e){
+        console.log(e);
+    }
+    
 
     return token;
 }
