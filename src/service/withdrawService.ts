@@ -14,7 +14,7 @@ export let withdraw = async () => {
 
         var cookieEtopWithdrawItem = await ConfigInfo.findAll({ where: { key: "empire_withdraw", type: "cookie" } });
 
-        var items = await connection.query("select ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage and qw.status = false ", { type: QueryTypes.SELECT });
+        var items = await connection.query("select distinct ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage and qw.status = false order by empirePriceCustom asc", { type: QueryTypes.SELECT });
         for (var i = 0; i < items.length; i++) {
 
             var token = await generateToken();
@@ -22,6 +22,8 @@ export let withdraw = async () => {
             await snooze(1000);
 
             var statsResp = await checkExist((items[i] as any).itemid);
+
+            console.log(`${(items[i] as any).itemid} ----- ${statsResp}`)
 
             if (!statsResp.status) {
                 // start withdraw
@@ -32,7 +34,7 @@ export let withdraw = async () => {
                     coin_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
                 })}`);
 
-                await axios.post(withdrawLink, querystring.stringify({
+                var resRut = await axios.post(withdrawLink, querystring.stringify({
                     security_token: `${token}`,
                     coin_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
                 }), {
@@ -41,31 +43,34 @@ export let withdraw = async () => {
                     }
                 });
 
+                console.log(`Ket quả rút trả về : ${resRut.data}`)
+
                 // update status withdraw empire
                 await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`)
 
                 // send mail
-                var transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: 'crawlgame91@gmail.com',
-                        pass: 'Trungtruc'
-                    }
-                });
+                // var transporter = nodemailer.createTransport({
+                //     service: 'gmail',
+                //     auth: {
+                //         user: 'crawlgame91@gmail.com',
+                //         pass: 'Trungtruc'
+                //     }
+                // });
 
-                var mailOptions = {
-                    from: 'crawlgame91@gmail.com',
-                    to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
-                    // to: 'trantrungtruc220691@gmail.com',
-                    subject: `Rút item empire ${(items[i] as any).name}`,
-                    text: `Rút item empire ${(items[i] as any).name}`
-                };
+                // var mailOptions = {
+                //     from: 'crawlgame91@gmail.com',
+                //     to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
+                //     // to: 'trantrungtruc220691@gmail.com',
+                //     subject: `Rút item empire ${(items[i] as any).name}`,
+                //     text: `Rút item empire ${(items[i] as any).name}`
+                // };
 
-                transporter.sendMail(mailOptions);
+                // transporter.sendMail(mailOptions);
             }
 
         }
     } catch (e) {
+        console.log(e);
 
     }
 
@@ -89,7 +94,7 @@ export let generateToken = async () => {
         });
 
         var token = tokenRes.data.token;
-        console.log(`Token generate ${token}`);
+        // console.log(`Token generate ${token}`);
     } catch (e) {
         console.log(e);
     }
