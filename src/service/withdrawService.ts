@@ -21,9 +21,9 @@ export let withdraw = async () => {
             // sleep
             await snooze(1000);
 
-            var status = await checkExist((items[i] as any).itemid);
+            var statsResp = await checkExist((items[i] as any).itemid);
 
-            if (status == true) {
+            if (!statsResp.status) {
                 // start withdraw
                 const withdrawLink = `https://csgoempire.com/api/v2/trading/deposit/${(items[i] as any).itemid}/withdraw`;
                 console.log(withdrawLink)
@@ -111,11 +111,11 @@ export let checkExist = async (id) => {
             }
         });
 
-        var status = statsRes.data.success;
+        var result = statsRes.data;
     } catch (e) {
         console.log(e);
     }
 
 
-    return status;
+    return result;
 }
