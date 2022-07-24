@@ -14,7 +14,7 @@ export let withdraw = async () => {
 
         var cookieEtopWithdrawItem = await ConfigInfo.findAll({ where: { key: "empire_withdraw", type: "cookie" } });
 
-        var items = await connection.query("select distinct ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage and qw.status = false order by empirePriceCustom asc", { type: QueryTypes.SELECT });
+        var items = await connection.query("select distinct ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage  order by empirePriceCustom asc", { type: QueryTypes.SELECT });
         for (var i = 0; i < items.length; i++) {
 
             var token = await generateToken();
