@@ -27,16 +27,16 @@ export let withdraw = async () => {
 
             if (!statsResp.status) {
                 // start withdraw
-                const withdrawLink = `https://csgoempire.com/api/v2/trading/deposit/${(items[i] as any).itemid}/withdraw`;
+                const withdrawLink = `https://csgoempire.com/api/v2/trading/deposit/${(items[i] as any).itemid}/bid`;
                 console.log(withdrawLink)
                 console.log(`request : ${querystring.stringify({
                     security_token: `${token}`,
-                    coin_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
+                    bid_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
                 })}`);
 
                 var resRut = await axios.post(withdrawLink, querystring.stringify({
                     security_token: `${token}`,
-                    coin_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
+                    bid_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
                 }), {
                     headers: {
                         'Cookie': cookieEtopWithdrawItem[0].value
@@ -46,7 +46,7 @@ export let withdraw = async () => {
                 console.log(`Ket quả rút trả về : ${resRut.data}`)
 
                 // update status withdraw empire
-                await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`)
+                // await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`)
 
                 // send mail
                 // var transporter = nodemailer.createTransport({
