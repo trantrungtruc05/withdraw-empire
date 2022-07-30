@@ -46,7 +46,8 @@ export let withdraw = async () => {
                 console.log(`Ket quả rút trả về : ${resRut.data}`)
 
                 // update status withdraw empire
-                // await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`)
+                // await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`);
+                await connection.query(`delete from empire_page where name = '${(items[i] as any).name}'`);
 
                 // send mail
                 // var transporter = nodemailer.createTransport({
