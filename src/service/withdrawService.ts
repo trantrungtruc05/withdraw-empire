@@ -51,7 +51,7 @@ export let withdraw = async () => {
                     service: 'gmail',
                     auth: {
                         user: 'crawlgame91@gmail.com',
-                        pass: 'Trungtruc'
+                        pass: 'Trungtruc05'
                     }
                 });
 
