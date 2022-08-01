@@ -48,10 +48,11 @@ export let withdraw = async () => {
 
                 // send mail
                 var transporter = nodemailer.createTransport({
-                    service: 'gmail',
+                    host: 'smtp.gmail.com',
+                    port: 465,
                     auth: {
                         user: 'crawlgame91@gmail.com',
-                        pass: 'Trungtruc05'
+                        pass: 'fhifvsefctndefxk'
                     }
                 });
 
