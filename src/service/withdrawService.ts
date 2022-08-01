@@ -34,39 +34,41 @@ export let withdraw = async () => {
                     bid_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
                 })}`);
 
-                var resRut = await axios.post(withdrawLink, querystring.stringify({
-                    security_token: `${token}`,
-                    bid_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
-                }), {
-                    headers: {
-                        'Cookie': cookieEtopWithdrawItem[0].value
-                    }
-                });
-
-                console.log(`Ket quả rút trả về : ${resRut.data}`)
-
-                // update status withdraw empire
-                // await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`);
-                await connection.query(`delete from empire_page where name = '${(items[i] as any).name}'`);
-
-                // send mail
-                // var transporter = nodemailer.createTransport({
-                //     service: 'gmail',
-                //     auth: {
-                //         user: 'crawlgame91@gmail.com',
-                //         pass: 'Trungtruc'
+                // var resRut = await axios.post(withdrawLink, querystring.stringify({
+                //     security_token: `${token}`,
+                //     bid_value: `${Math.round((items[i] as any).originalpricenotpercentage * 100)}`
+                // }), {
+                //     headers: {
+                //         'Cookie': cookieEtopWithdrawItem[0].value
                 //     }
                 // });
 
-                // var mailOptions = {
-                //     from: 'crawlgame91@gmail.com',
-                //     to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
-                //     // to: 'trantrungtruc220691@gmail.com',
-                //     subject: `Rút item empire ${(items[i] as any).name}`,
-                //     text: `Rút item empire ${(items[i] as any).name}`
-                // };
+                // console.log(`Ket quả rút trả về : ${resRut.data}`)
 
-                // transporter.sendMail(mailOptions);
+
+                // send mail
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'crawlgame91@gmail.com',
+                        pass: 'Trungtruc'
+                    }
+                });
+
+                var mailOptions = {
+                    from: 'crawlgame91@gmail.com',
+                    to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
+                    // to: 'trantrungtruc220691@gmail.com',
+                    subject: `Rút item empire ${(items[i] as any).name}`,
+                    text: `Rút item empire ${(items[i] as any).name} giá điều chỉnh ${(items[i] as any).empirePriceCustom}`
+                };
+
+                transporter.sendMail(mailOptions);
+            
+                // await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`);
+                await connection.query(`delete from empire_page where name = '${(items[i] as any).name}'`);
+
+                
             }
 
         }
