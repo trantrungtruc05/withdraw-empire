@@ -14,7 +14,7 @@ export let withdraw = async () => {
 
         var cookieEtopWithdrawItem = await ConfigInfo.findAll({ where: { key: "empire_withdraw", type: "cookie" } });
 
-        var items = await connection.query("select distinct ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage  order by empirePriceCustom asc", { type: QueryTypes.SELECT });
+        var items = await connection.query("select distinct ep.name, qw.empire_price_custom empirePriceCustom, ep.original_price_not_percentage originalPriceNotPercentage, ep.item_id itemId from empire_page ep inner join queue_empire_item_withdraw qw on ep.name = qw.name where qw.empire_price_custom >= ep.original_price_not_percentage and ep.name not in (select name from items_existed)  order by empirePriceCustom asc", { type: QueryTypes.SELECT });
         for (var i = 0; i < items.length; i++) {
 
             var token = await generateToken();
@@ -67,7 +67,7 @@ export let withdraw = async () => {
                 transporter.sendMail(mailOptions);
             
                 // await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`);
-                await connection.query(`delete from empire_page where name = '${(items[i] as any).name}'`);
+                await connection.query(`INSERT INTO items_existed VALUES ('${(items[i] as any).name}')`);
 
                 
             }

@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 
 import { ConfigInfo } from "../entity/ConfigInfo";
+import { ItemExisted } from "../entity/ItemExisted";
 
 const connection = new Sequelize({
   dialect: "postgres",
@@ -9,7 +10,7 @@ const connection = new Sequelize({
   password: "652606",
   database: "crawl",
   logging: false,
-  models: [ConfigInfo],
+  models: [ConfigInfo, ItemExisted],
 });
 
 export default connection;
