@@ -51,13 +51,13 @@ export let withdraw = async () => {
                     host: 'smtp.gmail.com',
                     port: 465,
                     auth: {
-                        user: 'crawlgame91@gmail.com',
-                        pass: 'fhifvsefctndefxk'
+                        user: 'kyrgiostran@gmail.com',
+                        pass: 'kpwqdmgvkjwxobhm'
                     }
                 });
 
                 var mailOptions = {
-                    from: 'crawlgame91@gmail.com',
+                    from: 'kyrgiostran@gmail.com',
                     to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
                     // to: 'trantrungtruc220691@gmail.com',
                     subject: `Rút item empire ${(items[i] as any).name}`,
