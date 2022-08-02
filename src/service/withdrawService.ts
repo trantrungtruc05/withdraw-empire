@@ -67,7 +67,7 @@ export let withdraw = async () => {
                 transporter.sendMail(mailOptions);
             
                 // await connection.query(`update queue_empire_item_withdraw set status = true where name = '${(items[i] as any).name}'`);
-                await connection.query(`INSERT INTO items_existed VALUES ('${(items[i] as any).name}')`);
+                await connection.query(`INSERT INTO(name) items_existed VALUES ('${(items[i] as any).name}')`);
 
                 
             }
