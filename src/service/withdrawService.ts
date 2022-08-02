@@ -61,7 +61,7 @@ export let withdraw = async () => {
                     to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
                     // to: 'trantrungtruc220691@gmail.com',
                     subject: `Rút item empire ${(items[i] as any).name}`,
-                    text: `Rút item empire ${(items[i] as any).name} giá điều chỉnh ${(items[i] as any).empirepricecustom}`
+                    text: `${(items[i] as any).name} : ${(items[i] as any).empirepricecustom}`
                 };
 
                 transporter.sendMail(mailOptions);
