@@ -58,7 +58,7 @@ export let withdraw = async () => {
 
                 var mailOptions = {
                     from: 'kyrgiostran@gmail.com',
-                    to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
+                    to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com;trankhanglee001@gmail.com',
                     // to: 'trantrungtruc220691@gmail.com',
                     subject: `Rút item empire ${(items[i] as any).name}`,
                     text: `${(items[i] as any).name} : ${(items[i] as any).empirepricecustom}`
